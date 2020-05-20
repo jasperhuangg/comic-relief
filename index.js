@@ -79,19 +79,20 @@ Array.prototype.remove = function () {
   return this;
 };
 
-// welcome room
+// welcome screen
 io.on("connection", (socket) => {
   // when someone disconnects, remove them from the game they are in and update lobby
   socket.on("disconnect", () => {
-    console.log("socket disconnection");
-    console.log(socket.gameID);
+    console.log("Disconnection from " + socket.name + " with ID " + socket.id);
     if (socket.gameID in games && games[socket.gameID].sockets.length !== 0) {
       games[socket.gameID].sockets.remove(socket);
       playerNames = getPlayersInGame(games[socket.gameID]);
       sendToAllPlayersInGame(games[socket.gameID], playerNames, "lobby update");
 
-      if (games[socket.gameID].sockets.length % 2 !== 0) {
-        console.log("not ready to start anymore");
+      if (games[socket.gameID].sockets.length === 0) {
+        // remove the game
+        delete games[socket.gameID];
+      } else if (games[socket.gameID].sockets.length % 2 !== 0) {
         sendToGameOwner(
           games[socket.gameID],
           "not ready to start",
@@ -121,7 +122,7 @@ io.on("connection", (socket) => {
       started: false,
       currentPlayer: 0,
       deck: cards,
-      storyText: "",
+      storyText: "<br>",
       cardsOnBoard: [],
     };
     games[game.gameID] = game;
@@ -163,7 +164,7 @@ io.on("connection", (socket) => {
 
     // if game has 4 players, give the owner the option to start the game
     if (games[socket.gameID].sockets.length % 2 === 0) {
-      console.log("ready to start");
+      console.log("Game with ID " + socket.gameID + " ready to start");
       sendToGameOwner(games[socket.gameID], "ready to start", "ready to start");
     }
   });
@@ -173,14 +174,9 @@ io.on("connection", (socket) => {
     games[socket.gameID].started = true;
 
     var deal = getRandom(games[socket.gameID].deck, 16);
-
-    console.log(games[socket.gameID].deck);
-    console.log(deal);
-
     games[socket.gameID].deck = games[socket.gameID].deck.filter(
       (value) => !deal.includes(value)
     );
-    console.log(games[socket.gameID].deck);
 
     for (let i = 0; i < games[socket.gameID].sockets.length; i++) {
       startingCards = deal.slice(4 * i, 4 * (i + 1));
@@ -190,6 +186,7 @@ io.on("connection", (socket) => {
         {
           startingCards: startingCards,
           currentPlayerName: games[socket.gameID].sockets[0].name,
+          playerNumber: i,
         },
         "game started"
       );
@@ -210,17 +207,25 @@ io.on("connection", (socket) => {
     var text = data.text;
 
     console.log(
-      name + " submitted turn with cardNum: " + cardNum + " and text: " + text
+      name +
+        " submitted their turn with card number " +
+        cardNum +
+        " and text '" +
+        text +
+        "'"
     );
 
     // update game data (text, cards on board, currentPlayer)
-    games[socket.gameID].storyText += text + " ";
+    games[socket.gameID].storyText +=
+      "<span class='color" +
+      games[socket.gameID].currentPlayer +
+      "'>" +
+      text +
+      "</span> ";
     games[socket.gameID].cardsOnBoard.push(parseInt(cardNum));
     games[socket.gameID].currentPlayer =
       (games[socket.gameID].currentPlayer + 1) %
       games[socket.gameID].sockets.length;
-
-    console.log(games[socket.gameID].deck);
 
     // deal a new random card to the person who just submitted their turn
     var newCard = getRandom(games[socket.gameID].deck, 1);
@@ -229,8 +234,6 @@ io.on("connection", (socket) => {
       oldCard: cardNum,
       newCard: newCard,
     });
-
-    console.log(games[socket.gameID].deck);
 
     // update everyone in the game about the updated cards on board and game text
     sendToAllPlayersInGame(

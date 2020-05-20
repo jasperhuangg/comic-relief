@@ -1,11 +1,10 @@
 <!-- 
   TODO:
-  - word count checker for text input
-  - different colors for story display
-  - the ability to rejoin the game room after you have closed the tab
-  - background for welcome/lobby screens
+  - the ability to rejoin the game room after you have closed a tab
   - implement voting mechanic after the game (choice to start new game or go to summary screen)
     ==> ability to export games at summary screen?
+  - SFX
+
 -->
 
 <!doctype html>
@@ -17,6 +16,26 @@
   <style>
     body {
       background-color: #242422 !important;
+      /* background-image: url("./assets/background.png"); */
+      background-size: cover;
+      background-origin: content-box;
+      background-position: top 100px;
+    }
+
+    .color0 {
+      color: white !important;
+    }
+
+    .color1 {
+      color: #69DDFF !important;
+    }
+
+    .color2 {
+      color: #9BC4BC !important;
+    }
+
+    .color3 {
+      color: #9F87AF !important;
     }
 
     .gameID:hover {
@@ -97,8 +116,6 @@
       overflow: auto !important;
     }
 
-
-
     .player-card img {
       border-radius: 7px;
       margin: 2px;
@@ -115,6 +132,7 @@
     #logo {
       width: 400px;
       height: 300px;
+      pointer-events: none;
     }
 
     .custom-font {
@@ -193,6 +211,9 @@
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
+<audio id="update">
+  <source src="./audio/update.mp3" type="audio/mpeg">
+</audio>
 
 <body>
   <div id="welcome-section" class="container-fluid w-50"><br><br><br><br>
@@ -226,6 +247,9 @@
       <button id="start-button" type="button" class="btn btn-info custom-font" disabled><strong>Start
           Game</strong></button>
     </div>
+  </div>
+  <div id="how-to-play" class="d-none">
+
   </div>
   <div id="game-section" class="container-fluid d-none">
     <div id="tabletop" class="row mx-4 mt-4">
@@ -290,10 +314,15 @@
         </div>
       </div>
       <div id="right" class="col-6">
+
         <div class="text-white custom-font font-italic" id="story">
+          <br>
         </div>
         <br>
         <div id="player-input">
+          <small id="words-info" class="custom-font-small text-white font-italic"><span id="num-words-left">20</span>
+            word(s)
+            remaining</small>
           <div class="form-group form-group-lg">
             <textarea class="form-control custom-font" id="sentence-input" rows="2"
               placeholder="Please type with grammatical accuracy!" disabled></textarea>
@@ -355,7 +384,6 @@
 
   // game confirmation
   socket.on("start success", function (data) {
-    console.log("start success");
     sessionStorage.setItem("gameID", data.gameID);
     sessionStorage.setItem("name", $("#name").val());
     $(".gameID").html(sessionStorage.getItem("gameID"));
@@ -370,7 +398,6 @@
   });
 
   socket.on("join success", function (data) {
-    console.log("join success");
     sessionStorage.setItem("gameID", data.gameID);
     sessionStorage.setItem("name", $("#name").val());
     $(".gameID").html(sessionStorage.getItem("gameID"));
@@ -400,7 +427,6 @@
   });
 
   socket.on("not ready to start", function (data) {
-    console.log("not ready to start");
     $("#start-button").attr("disabled", '');
   });
 
@@ -445,7 +471,6 @@
 
   function setStoryHeight() {
     let boardHeight = $(".grid").height();
-    console.log(boardHeight);
     $("#story").height(boardHeight * .4);
   }
 
@@ -456,12 +481,16 @@
     $("#game-section").removeClass("d-none");
     setStoryHeight();
 
+    // set their typing color
+    $("#sentence-input").addClass("color" + data.playerNumber);
+
     // deal the 4 starting cards given by the server
     $(".player-card").each(function (index) {
       $(this).children("img").attr("src", "./assets/Card" + data.startingCards[index] + ".png");
     });
 
     $("#current-player-name").html(data.currentPlayerName + "'s");
+
   });
 
   $(document).ready(function () {
@@ -484,7 +513,6 @@
     });
     $(this).children("img").css("border", "solid 4px #24a1b7");
     var periodIndex = $(this).children("img").attr("src").search("png") - 1;
-    console.log(periodIndex);
     $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
   })
 
@@ -494,7 +522,9 @@
 
     var text = $("#sentence-input").val();     // get sentence-input text
 
-    if (cardNum !== "" && text !== "") {
+    var numWords = countWords(text);
+
+    if (cardNum !== "" && text !== "" && numWords <= 20) {
       socket.emit("submit turn", {
         name: sessionStorage.getItem("name"),
         cardNum: cardNum,
@@ -505,8 +535,11 @@
         $(this).children("img").css("border", "none");
       });
       $("#selected-card").html("");
-    } else {
+      $("#num-words-left").html("20");
+    } else if (cardNum === "" || text === "") {
       alert("Please type your part of the story and select a card!");
+    } else {
+      alert("Too many words!");
     }
   });
 
@@ -542,18 +575,49 @@
     if (data.currentPlayerName !== sessionStorage.getItem("name")) {
       $("#current-player-name").html(data.currentPlayerName + "'s");
     }
-    else {
-      $("#current-player-name").html("your");
-    }
 
     // scroll to the bottom of the board
     $('#story').scrollTop($('#story')[0].scrollHeight);
 
+    var sfx = document.getElementById("update");
+    sfx.play();
+
     if (data.cardsOnBoard.length === 0) {
       alert("Game completed!");
     }
+  });
 
-  })
+  function countWords(str) {
+    if (str == "" || str == undefined || str == null) {
+      return 0;
+    }
+    str = str.replace(/(^\s*)|(\s*$)/gi, "");
+    str = str.replace(/[ ]{2,}/gi, " ");
+    str = str.replace(/\n /, "\n");
+    return str.split(' ').length;
+  }
+
+  // provide count of number of words
+  $("#sentence-input").on("input", function () {
+    var input = $("#sentence-input").val();
+    console.log("input: " + input);
+    var wordCount = countWords(input);
+    console.log("wordCount: " + wordCount);
+
+    var numWordsLeft = 20 - wordCount;
+    console.log(numWordsLeft);
+
+    $("#num-words-left").html(numWordsLeft);
+
+    if (numWordsLeft < 0 && !$("#words-info").hasClass("text-danger")) {
+      $("#words-info").addClass("text-danger");
+    }
+    else if ($("#words-info").hasClass("text-danger")) {
+      $("#words-info").removeClass("text-danger");
+    }
+  });
+
+
 
 </script>
 
