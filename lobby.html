@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Comic Relief &ndash; Lobby</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+
+<body>
+  <h3>Lobby for <span id="gameID"></span></h3>
+  <ul></ul>
+</body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  socket.emit('entered lobby', {
+    name: sessionStorage.getItem("name"),
+    gameID: sessionStorage.getItem("gameID"),
+  });
+
+  function updateLobbyPlayerList(players) {
+    console.log(players);
+  }
+
+  socket.on("lobby update", function (data) {
+    updateLobbyPlayerList(data);
+  });
+
+  $("#gameID").html(sessionStorage.getItem("gameID"));
+</script>
+
+</html>
