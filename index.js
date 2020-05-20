@@ -147,11 +147,11 @@ io.on("connection", (socket) => {
       } else if (games[gameID].sockets.length === 4) {
         socket.emit("join failure", "game full");
       } else if (games[gameID].started === true) {
-        socket.emit("join failure", "game already started");
+        socket.emit("join failure", "Game already started.");
       }
     } else {
       // emit no game with that gameID exists back to client
-      socket.emit("join failure", "gameID does not exist");
+      socket.emit("join failure", "Game ID does not exist.");
     }
   });
 
