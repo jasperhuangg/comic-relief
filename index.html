@@ -2,9 +2,13 @@
 <html>
 
 <head>
-  <link rel="shortcut icon" href="">
+  <link rel="shortcut icon" href="./assets/0-chitback.png" />
   <title>Comic Relief</title>
   <style>
+    body {
+      background-color: #242422 !important;
+    }
+
     .gameID:hover {
       cursor: pointer;
     }
@@ -33,12 +37,16 @@
       font-size: 1rem;
     }
 
+    .box {
+      border-radius: 7px;
+    }
+
     .row {
       display: flex;
     }
 
     .handwriting {
-      font-family: 'Shadows Into Light Two', cursive;
+      font-family: 'Indie Flower', cursive;
       font-size: 20px;
     }
 
@@ -73,14 +81,17 @@
     }
 
     #story {
+
       overflow-y: scroll;
       overflow-wrap: normal;
+      overflow: auto !important;
     }
 
+
+
     .player-card img {
-      border-radius: 5px;
+      border-radius: 7px;
       margin: 2px;
-      box-sizing: border-box;
       /* border: 2px black solid; */
       max-width: 100%;
       max-height: 100%;
@@ -90,9 +101,83 @@
     .player-card img:hover {
       cursor: pointer;
     }
+
+    #logo {
+      width: 400px;
+      height: 300px;
+    }
+
+    .custom-font {
+      font-family: 'Balsamiq Sans', cursive;
+    }
+
+    .custom-font-small {
+      font-family: 'Balsamiq Sans', cursive;
+      font-size: 12px !important;
+    }
+
+    textarea {
+      background-color: #242422 !important;
+      border: white 2px solid !important;
+      border-radius: 8px !important;
+      color: white !important;
+    }
+
+    input {
+      background-color: #242422 !important;
+      border: white 2px solid !important;
+      border-radius: 8px !important;
+      color: white !important;
+    }
+
+    ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #ededed;
+      opacity: 1;
+      /* Firefox */
+    }
+
+    :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #ededed
+    }
+
+    ::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: #ededed
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 5px;
+      border-radius: 2px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #242422;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: white;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: white;
+    }
+
+    li {
+      background-color: #242422 !important;
+      color: white !important;
+      border-color: #ededed !important;
+    }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
@@ -100,31 +185,35 @@
 
 <body>
   <div id="welcome-section" class="container-fluid w-50"><br><br><br><br>
-    <h1 class="text-center">Welcome to Comic Relief!</h1><br><br>
+    <div class="text-center">
+      <img id="logo" src="./assets/00-logo.png" />
+    </div>
     <br>
     <form>
-      <div class="form-group">
-        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+      <div class="form-group form-group-lg">
+        <input type="text" class="form-control custom-font" id="name" placeholder="Enter your name">
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control" id="gameID" placeholder="Game ID to join">
+      <div class="form-group form-group-lg">
+        <input type="text" class="form-control custom-font" id="gameID" placeholder="Game ID to join">
       </div>
       <div id="buttons" class="text-center">
-        <button id="join" class="btn btn-info">Join</button>
-        <button id="start" class="btn btn-info">Create a Game</button>
+        <button id="join" class="btn btn-info custom-font"><strong>Join</strong></button>
+        <button id="start" class="btn btn-info custom-font"><strong>Create a Game</strong></button>
       </div>
     </form>
   </div>
   <div id="lobby-section" class="container-fluid w-50 d-none">
     <br><br><br><br>
-    <h3>Lobby for Game ID:<br><br>
-      <div class="gameID font-italic"></div>
-      <small id="click-to-copy">(click to copy)</small>
+    <h3 class="text-white custom-font"><strong>Lobby for Game ID:</strong><br><br>
+      <div class="text-white gameID font-italic custom-font"></div>
+      <small class="text-white custom-font-small" id="click-to-copy">(click to copy)</small>
     </h3><br><br>
-    <ul id="player-list" class="list-group"></ul>
+    <p class="custom-font text-white">In game:</p>
+    <ul id="player-list" class="list-group custom-font"></ul>
     <br>
     <div class="text-center">
-      <button id="start-button" type="button" class="btn btn-info" disabled>Start Game</button>
+      <button id="start-button" type="button" class="btn btn-info custom-font" disabled><strong>Start
+          Game</strong></button>
     </div>
   </div>
   <div id="game-section" class="container-fluid d-none">
@@ -132,70 +221,70 @@
       <div id="board" class="col-6 row mr-2">
         <div class="grid">
           <div class="row">
-            <div class="box">
-              <div class="inner">1</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">2</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">3</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">4</div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="box">
-              <div class="inner">5</div>
-            </div>
-            <div class="box">
-              <div class="inner">6</div>
-            </div>
-            <div class="box">
-              <div class="inner">7</div>
-            </div>
-            <div class="box">
-              <div class="inner">8</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
           </div>
           <div class="row">
-            <div class="box">
-              <div class="inner">9</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">10</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">11</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">12</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
           </div>
           <div class="row">
-            <div class="box">
-              <div class="inner">13</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">14</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">15</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
-            <div class="box">
-              <div class="inner">16</div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner"></div>
             </div>
           </div>
         </div>
       </div>
       <div id="right" class="col-6">
-        <div class="handwriting" id="story">
+        <div class="text-white handwriting" id="story">
         </div>
         <br>
         <div id="player-input">
-          <div class="form-group">
-            <textarea class="form-control" id="sentence-input" rows="2"
+          <div class="form-group form-group-lg">
+            <textarea class="form-control custom-font" id="sentence-input" rows="2"
               placeholder="Please type with grammatical accuracy!" disabled></textarea>
           </div>
         </div>
@@ -207,9 +296,10 @@
           <div class="d-none" id="selected-card"></div>
         </div>
         <br>
-        <div class="text-center"><button id="submit-end-turn" class="btn btn-info" disabled>Submit and End
-            Turn</button><br><br>
-          <div class="font-italic">It's <span id="current-player-name"></span> turn.</div>
+        <div class="text-center"><button id="submit-end-turn" class="btn btn-info custom-font" disabled><strong>Submit
+              and End
+              Turn</strong></button><br><br>
+          <div class="font-italic custom-font-small text-white">(It's <span id="current-player-name"></span> turn)</div>
         </div>
 
       </div>
@@ -381,7 +471,7 @@
     $(document).find(".player-card").each(function () {
       $(this).children("img").css("border", "none");
     });
-    $(this).children("img").css("border", "ridge 2px black");
+    $(this).children("img").css("border", "solid 4px #24a1b7");
     var periodIndex = $(this).children("img").attr("src").search("png") - 1;
     console.log(periodIndex);
     $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
@@ -404,6 +494,8 @@
         $(this).children("img").css("border", "none");
       });
       $("#selected-card").html("");
+    } else {
+      alert("Please type your part of the story and select a card!");
     }
   });
 
