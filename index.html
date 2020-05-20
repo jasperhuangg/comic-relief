@@ -36,6 +36,11 @@
       display: flex;
     }
 
+    .handwriting {
+      font-family: 'Shadows Into Light Two', cursive;
+      font-size: 20px;
+    }
+
     .box {
       background: gray;
       padding-top: 8.65%;
@@ -71,10 +76,8 @@
       overflow-wrap: normal;
     }
 
-    .player-card {}
-
     .player-card img {
-
+      border-radius: 5px;
       margin: 2px;
       box-sizing: border-box;
       /* border: 2px black solid; */
@@ -88,14 +91,15 @@
     }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
   <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 
 <body>
-  <div id="welcome-section" class="container-fluid w-50">
-    <h1 class="text-center">Welcome to Comic Relief!</h1>
+  <div id="welcome-section" class="container-fluid w-50"><br><br><br><br>
+    <h1 class="text-center">Welcome to Comic Relief!</h1><br><br>
     <br>
     <form>
       <div class="form-group">
@@ -105,20 +109,21 @@
         <input type="text" class="form-control" id="gameID" placeholder="Game ID to join">
       </div>
       <div id="buttons" class="text-center">
-        <button id="join" class="btn btn-primary">Join</button>
-        <button id="start" class="btn btn-primary">Create a Game</button>
+        <button id="join" class="btn btn-info">Join</button>
+        <button id="start" class="btn btn-info">Create a Game</button>
       </div>
     </form>
   </div>
   <div id="lobby-section" class="container-fluid w-50 d-none">
-    <h3>Lobby for Game ID:<br>
+    <br><br><br><br>
+    <h3>Lobby for Game ID:<br><br>
       <div class="gameID font-italic"></div>
       <small id="click-to-copy">(click to copy)</small>
     </h3><br><br>
     <ul id="player-list" class="list-group"></ul>
     <br>
     <div class="text-center">
-      <button id="start-button" type="button" class="btn btn-primary" disabled>Start Game</button>
+      <button id="start-button" type="button" class="btn btn-info" disabled>Start Game</button>
     </div>
   </div>
   <div id="game-section" class="container-fluid d-none">
@@ -126,7 +131,7 @@
       <div id="board" class="col-6 row mr-2">
         <div class="grid">
           <div class="row">
-            <div class="box" style="background-image: url('./assets/Card4.png')">
+            <div class="box">
               <div class="inner">1</div>
             </div>
             <div class="box">
@@ -184,23 +189,27 @@
         </div>
       </div>
       <div id="right" class="col-6">
-        <div id="story">
+        <div class="handwriting" id="story">
         </div>
         <br>
         <div id="player-input">
           <div class="form-group">
-            <textarea class="form-control" id="input" rows="2" placeholder="" disabled></textarea>
+            <textarea class="form-control" id="sentence-input" rows="2"
+              placeholder="Please type with grammatical accuracy!" disabled></textarea>
           </div>
         </div>
         <div class="row" id="player-cards">
-          <div class="col-3 player-card" id="card1"><img src="./assets/Card4.png"></div>
-          <div class="col-3 player-card" id="card1"><img src="./assets/Card4.png"></div>
-          <div class="col-3 player-card" id="card1"><img src="./assets/Card4.png"></div>
-          <div class="col-3 player-card" id="card1"><img src="./assets/Card4.png"></div>
+          <div class="col-3 player-card" id="card1"><img /></div>
+          <div class="col-3 player-card" id="card2"><img /></div>
+          <div class="col-3 player-card" id="card3"><img /></div>
+          <div class="col-3 player-card" id="card4"><img /></div>
+          <div class="d-none" id="selected-card"></div>
         </div>
         <br>
-        <div class="text-center"><button id="submit-end-turn" class="btn btn-primary" disabled>Submit and End
-            Turn</button></div>
+        <div class="text-center"><button id="submit-end-turn" class="btn btn-info" disabled>Submit and End
+            Turn</button><br><br>
+          <div class="font-italic">It's <span id="current-player-name"></span> turn.</div>
+        </div>
 
       </div>
     </div>
@@ -339,13 +348,19 @@
   }
 
   socket.on("game started", function (data) {
+    // display the game section
     $("#lobby-section").addClass("d-none");
     setStoryHeight();
     $("#game-section").removeClass("d-none");
     setStoryHeight();
+
+    // deal the 4 starting cards given by the server
+    $(".player-card").each(function (index) {
+      $(this).children("img").attr("src", "./assets/Card" + data.startingCards[index] + ".png");
+    });
+
+    $("#current-player-name").html(data.currentPlayerName + "'s");
   });
-
-
 
   $(document).ready(function () {
     setStoryHeight();
@@ -354,6 +369,85 @@
   $(window).resize(function () {
     setStoryHeight();
   });
+
+  socket.on("your turn", function (data) {
+    $("#sentence-input").removeAttr("disabled");
+    $("#submit-end-turn").removeAttr("disabled");
+    $("#current-player-name").html("your");
+  });
+
+  $(".player-card").on("click", function () {
+    $(document).find(".player-card").each(function () {
+      $(this).children("img").css("border", "none");
+    });
+    $(this).children("img").css("border", "ridge 2px black");
+    var periodIndex = $(this).children("img").attr("src").search("png") - 1;
+    console.log(periodIndex);
+    $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
+  })
+
+  $("#submit-end-turn").on("click", function () {
+
+    var cardNum = $("#selected-card").html();     // get selected card #
+
+    var text = $("#sentence-input").val();     // get sentence-input text
+
+    if (cardNum !== "" && text !== "") {
+      socket.emit("submit turn", {
+        name: sessionStorage.getItem("name"),
+        cardNum: cardNum,
+        text: text
+      });
+      $("#sentence-input").val("");
+      $(document).find(".player-card").each(function () {
+        $(this).children("img").css("border", "none");
+      });
+      $("#selected-card").html("");
+    }
+  });
+
+  // deal the new card to the player
+  socket.on("dealt card", function (data) {
+    var oldCard = "./assets/Card" + data.oldCard + ".png";
+    var newCard = "./assets/Card" + data.newCard + ".png";
+
+    $(".player-card").each(function () {
+      if ($(this).children("img").attr("src") === oldCard) {
+        $(this).children("img").attr("src", newCard);
+      }
+    });
+    $("#sentence-input").attr("disabled", '');
+    $("#submit-end-turn").attr("disabled", '');
+  });
+
+  socket.on("update board", function (data) {
+    var cardsOnBoard = data.cardsOnBoard;
+    var storyText = data.text;
+    $("#story").html(storyText);
+
+    $(document).find(".box").each(function (index) {
+      // break out when we run out of cards in the updated board
+      if (index === cardsOnBoard.length) {
+        return false;
+      }
+      var card = "./assets/Card" + cardsOnBoard[index] + ".png";
+      $(this).css("background-image", "url('" + card + "')");
+      $(this).children(".inner").html("");
+    });
+
+    if (data.currentPlayerName !== sessionStorage.getItem("name")) {
+      $("#current-player-name").html(data.currentPlayerName + "'s");
+    }
+    else {
+      $("#current-player-name").html("your");
+    }
+
+
+    if (data.cardsOnBoard.length === 0) {
+      alert("Game completed!");
+    }
+
+  })
 
 </script>
 
