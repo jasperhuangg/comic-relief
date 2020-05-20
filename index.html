@@ -1,3 +1,13 @@
+<!-- 
+  TODO:
+  - word count checker for text input
+  - different colors for story display
+  - the ability to rejoin the game room after you have closed the tab
+  - background for welcome/lobby screens
+  - implement voting mechanic after the game (choice to start new game or go to summary screen)
+    ==> ability to export games at summary screen?
+-->
+
 <!doctype html>
 <html>
 
@@ -198,7 +208,7 @@
         <input type="text" class="form-control custom-font" id="gameID" placeholder="Game ID to join">
       </div>
       <div id="buttons" class="text-center">
-        <button id="join" class="btn btn-info custom-font"><strong>Join</strong></button>
+        <button id="join" class="btn btn-info custom-font mr-2"><strong>Join</strong></button>
         <button id="start" class="btn btn-info custom-font"><strong>Create a Game</strong></button>
       </div>
     </form>
@@ -280,7 +290,7 @@
         </div>
       </div>
       <div id="right" class="col-6">
-        <div class="text-white handwriting" id="story">
+        <div class="text-white custom-font font-italic" id="story">
         </div>
         <br>
         <div id="player-input">
@@ -536,6 +546,8 @@
       $("#current-player-name").html("your");
     }
 
+    // scroll to the bottom of the board
+    $('#story').scrollTop($('#story')[0].scrollHeight);
 
     if (data.cardsOnBoard.length === 0) {
       alert("Game completed!");
