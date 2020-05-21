@@ -241,6 +241,10 @@
     .smaller-bottom-margin {
       margin-bottom: 5px !important;
     }
+
+    .voteText {
+      border-radius: 4px;
+    }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
@@ -376,16 +380,13 @@
         <br>
         <div class="text-center"><button id="submit-end-turn" class="btn btn-info custom-font" disabled><strong>Submit
               and End
-              Turn</strong></button><br><br>
+              Turn</strong></button><button id="proceed-to-voting"
+            class="d-none btn btn-info custom-font"><strong>Proceed to
+              Voting</strong></button><br><br>
           <div id="turn-prompt" class="font-italic custom-font-small text-white">(It's <span
               id="current-player-name"></span> turn)</div>
         </div>
       </div>
-    </div>
-    <div id="story-complete-popup" class="text-center d-none text-white"><br><br>
-      <h3 class="custom-font font-italic">Congratulations! <br>Your story has been completed.</h3><br><br>
-      <button id="proceed-to-voting" class="btn btn-info custom-font" disabled><strong>Proceed to
-          Voting</strong></button><br>
     </div>
   </div>
   <div id="post-game-section" class="container-fluid d-none">
@@ -544,12 +545,6 @@
     });
 
     $("#current-player-name").html(data.currentPlayerName + "'s");
-
-    // remove disabled attribute on the button on the post-game popup for the owner
-    if (data.playerNumber === 0) {
-      $("#proceed-to-voting").removeAttr("disabled");
-    }
-
   });
 
   $(document).ready(function () {
@@ -561,9 +556,11 @@
   });
 
   socket.on("your turn", function (data) {
-    $("#sentence-input").removeAttr("disabled");
-    $("#submit-end-turn").removeAttr("disabled");
-    $("#current-player-name").html("your");
+    if ($("#proceed-to-voting").hasClass("d-none")) {
+      $("#sentence-input").removeAttr("disabled");
+      $("#submit-end-turn").removeAttr("disabled");
+      $("#current-player-name").html("your");
+    }
   });
 
   $(".player-card").on("click", function () {
@@ -631,7 +628,6 @@
 
     $("#current-player-name").html(data.currentPlayerName + "'s");
 
-
     // scroll to the bottom of the textarea
     $('#story').scrollTop($('#story')[0].scrollHeight);
 
@@ -640,16 +636,24 @@
 
     if (data.cardsOnBoard.length === 16) {
 
+
+
       // disable all inputs
       $("#sentence-input").attr("disabled", '');
       $("#submit-end-turn").attr("disabled", '');
 
-      // display the popup after 5 seconds
-      // setTimeout(function () {
-      $("#story-complete-popup").removeClass("d-none");
-      // }, 5000);
 
+      $("#submit-end-turn").addClass("d-none");       // hide the submit button
+      $("#proceed-to-voting").removeClass("d-none");  // show the proceed to voting button
 
+      // change the player turn prompt text
+      $("#turn-prompt").html("(Story complete!)");
+
+      // copy everything in the board and the story text to the voting section
+      $("#voting-board").html($(".grid").html());
+      $("#voting-story").html($("#story").html());
+
+      alert("Congratulations, your team has completed your story!");
     }
   });
 
@@ -683,22 +687,14 @@
 
   /* ----------------------------------------VOTING---------------------------------------- */
 
-  // only the owner can click this button, send message to server to proceed everyone to voting
   $("#proceed-to-voting").on("click", function () {
-    socket.emit("owner clicked proceed to voting");
+    $("#game-section").addClass("d-none"); // hide the game section
+
+    $("#post-game-section").removeClass("d-none"); // show the post-game-section
   });
 
   socket.on("proceed to voting", function (data) {
-    $("#game-section").addClass("d-none"); // hide the game section
-
-    // copy everything in the board and the story text to the voting section
-    $("#voting-board").html($(".grid").html());
-    $("#voting-story").html($("#story").html());
-
-    $("#post-game-section").removeClass("d-none"); // show the post-game-section
-
   });
-
 
   voteChoices = [];
 
@@ -726,6 +722,20 @@
       $("html, body").animate({ scrollTop: 0 }, "fast");
     }
   });
+
+  $("#voting-board").on("mouseenter", ".box", function () {
+    var rowIndex = $(this).parent().index();
+    var index = $(this).index() + 4 * rowIndex;
+    console.log("hovered in card " + index);
+    $("#voting-story").find(".cardMatch" + index).css("background-color", "slategrey");
+  })
+
+  $("#voting-board").on("mouseleave", ".box", function () {
+    var rowIndex = $(this).parent().index();
+    var index = $(this).index() + 4 * rowIndex;
+    console.log("hovered out card " + index);
+    $("#voting-story").find(".cardMatch" + index).css("background-color", "transparent");
+  })
 
   socket.on("vote update", (data) => {
     addVoteTokenToPanel($(".box").eq(data.panelNum + 16), data.category, data.playerNumber);

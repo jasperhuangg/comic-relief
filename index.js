@@ -216,10 +216,16 @@ io.on("connection", (socket) => {
         "'"
     );
 
+    // zero-based
+    var classNumForHighlights =
+      "cardMatch" + games[socket.gameID].cardsOnBoard.length;
+
     // update game data (text, cards on board, currentPlayer)
     games[socket.gameID].storyText +=
-      "<span class='color" +
+      "<span class='voteText color" +
       games[socket.gameID].currentPlayer +
+      " " +
+      classNumForHighlights +
       "'>" +
       text +
       "</span> ";
@@ -288,38 +294,49 @@ io.on("connection", (socket) => {
     );
 
     // store the vote as well
-    if (!(data.name in games[socket.gameID].votes)) {
-      games[socket.gameID].votes[data.name] = [
+    if (!(socket.id in games[socket.gameID].votes)) {
+      games[socket.gameID].votes[socket.id] = [
         {
           panelNum: data.panelNum,
           category: data.category,
         },
       ];
     } else {
-      games[socket.gameID].votes[data.name].push({
+      games[socket.gameID].votes[socket.id].push({
         panelNum: data.panelNum,
         category: data.category,
       });
     }
+
     var numPlayersSubmittedVotes = Object.keys(games[socket.gameID].votes)
       .length;
+
+    console.log(games[socket.gameID].votes);
+
+    console.log(numPlayersSubmittedVotes + " have submitted their votes");
+
     // if we have votes from all players
     if (numPlayersSubmittedVotes === games[socket.gameID].sockets.length) {
       // if the last vote was just submitted, redirect all players to a summary screen
       var lastVoteSubmitted = true;
 
-      for (var name in games[socket.gameID].votes) {
-        if (games[socket.gameID].votes[name].length !== 3) {
+      for (var id in games[socket.gameID].votes) {
+        if (games[socket.gameID].votes[id].length !== 3) {
           lastVoteSubmitted = false;
           break;
         }
       }
       if (lastVoteSubmitted === true) {
-        sendToAllPlayersInGame(
-          games[socket.gameID],
-          "all votes submitted",
-          "all votes submitted"
-        );
+        console.log("all votes submitted!");
+
+        // wait 3 seconds for last player's vote to pop up
+        setTimeout(function () {
+          sendToAllPlayersInGame(
+            games[socket.gameID],
+            "all votes submitted",
+            "all votes submitted"
+          );
+        }, 1500);
       }
     }
   });
