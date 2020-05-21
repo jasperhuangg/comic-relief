@@ -107,6 +107,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 85%;
     }
 
     #story {
@@ -202,6 +203,43 @@
       color: white !important;
       border-color: #ededed !important;
     }
+
+    #story-complete-popup {
+      width: 40vw;
+      background-color: #242422;
+      border: solid 5px #24a1b7;
+      border-radius: 10px;
+      position: fixed;
+      right: 0;
+      left: 0;
+      top: 20vw;
+      margin-right: auto;
+      margin-left: auto;
+      z-index: 1000;
+      padding-bottom: 20px;
+    }
+
+    #voting-board .box {
+      cursor: pointer;
+    }
+
+    .voting-token {
+      width: 25% !important;
+      border-radius: 50%;
+      box-shadow: 5px 5px 5px #363636;
+      background-color: #8c8c8c;
+      z-index: 1000;
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+
+    #voting-container {
+      width: 85%;
+    }
+
+    .smaller-bottom-margin {
+      margin-bottom: 5px !important;
+    }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
@@ -235,7 +273,7 @@
     </form>
   </div>
   <div id="lobby-section" class="container-fluid w-50 d-none">
-    <br><br><br><br>
+    <br><br><br><br><br><br><br><br>
     <h3 class="text-white custom-font"><strong>Lobby for Game ID:</strong><br><br>
       <div class="text-white gameID font-italic custom-font"></div>
       <small class="text-white custom-font-small" id="click-to-copy">(click to copy)</small>
@@ -257,65 +295,64 @@
         <div class="grid">
           <div class="row">
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
-            </div>
-            <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
-            </div>
-            <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
-            </div>
-            <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
           </div>
           <div class="row">
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
           </div>
           <div class="row">
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
             </div>
             <div class="box" style="background-image: url('./assets/Card_back.png');">
-              <div class="inner"></div>
+              <div class="inner row mx-auto"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner row mx-auto"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner row mx-auto"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner row mx-auto"></div>
+            </div>
+            <div class="box" style="background-image: url('./assets/Card_back.png');">
+              <div class="inner row mx-auto"></div>
             </div>
           </div>
         </div>
       </div>
       <div id="right" class="col-6">
-
-        <div class="text-white custom-font font-italic" id="story">
+        <div class="custom-font font-italic" id="story">
           <br>
         </div>
         <br>
@@ -341,21 +378,34 @@
               Turn</strong></button><br><br>
           <div class="font-italic custom-font-small text-white">(It's <span id="current-player-name"></span> turn)</div>
         </div>
-
       </div>
     </div>
-    <!-- <div id="token-numbers" class="col-2">
-        <div>player1</div>
-        <div>player2</div>
-        <div>player3</div>
-        <div>player4</div>
-      </div> -->
+    <div id="story-complete-popup" class="text-center d-none text-white"><br><br>
+      <h3 class="custom-font font-italic">Congratulations! <br>Your story has been completed.</h3><br><br>
+      <button id="proceed-to-voting" class="btn btn-info custom-font" disabled><strong>Proceed to
+          Voting</strong></button><br>
+    </div>
+  </div>
+  <div id="post-game-section" class="container-fluid d-none">
+    <div class="text-center custom-font text-white">
+      <br><br>
+      <h1><strong id="voting-prompt-text">Choose the <span id="vote-adjective">Funniest</span> Panel</strong></h1>
+      <br>
+    </div>
+    <div id="voting-container" class="row mx-auto">
+      <div id="voting-board" class="col-8"></div>
+      <div class="custom-font font-italic col-4" id="voting-story"></div>
+    </div>
+  </div>
+
+  </div>
 </body>
 <script src="/socket.io/socket.io.js"></script>
 <script>
   var socket = io();
 
   /* ----------------------------------------WELCOME---------------------------------------- */
+
   $("#join").on("click", function (e) {
     e.preventDefault();
     var name = $("#name").val();
@@ -418,6 +468,7 @@
   });
 
   /* ----------------------------------------LOBBY---------------------------------------- */
+
   socket.on("lobby update", function (data) {
     updateLobbyPlayerList(data);
   });
@@ -465,7 +516,7 @@
       gameID: $(".gameID").html()
     });
 
-  })
+  });
 
   /* ----------------------------------------GAMEPLAY---------------------------------------- */
 
@@ -490,6 +541,11 @@
     });
 
     $("#current-player-name").html(data.currentPlayerName + "'s");
+
+    // remove disabled attribute on the button on the post-game popup for the owner
+    if (data.playerNumber === 0) {
+      $("#proceed-to-voting").removeAttr("disabled");
+    }
 
   });
 
@@ -517,7 +573,6 @@
   })
 
   $("#submit-end-turn").on("click", function () {
-
     var cardNum = $("#selected-card").html();     // get selected card #
 
     var text = $("#sentence-input").val();     // get sentence-input text
@@ -537,7 +592,7 @@
       $("#selected-card").html("");
       $("#num-words-left").html("20");
     } else if (cardNum === "" || text === "") {
-      alert("Please type your part of the story and select a card!");
+      alert("Please type your part of the story AND select a card!");
     } else {
       alert("Too many words!");
     }
@@ -569,7 +624,6 @@
       }
       var card = "./assets/Card" + cardsOnBoard[index] + ".png";
       $(this).css("background-image", "url('" + card + "')");
-      $(this).children(".inner").html("");
     });
 
     if (data.currentPlayerName !== sessionStorage.getItem("name")) {
@@ -582,8 +636,14 @@
     var sfx = document.getElementById("update");
     sfx.play();
 
-    if (data.cardsOnBoard.length === 0) {
-      alert("Game completed!");
+    if (data.cardsOnBoard.length === 16) {
+
+      // disable all inputs
+      $("#sentence-input").attr("disabled", '');
+      $("#submit-end-turn").attr("disabled", '');
+
+      // display the popup
+      $("#story-complete-popup").removeClass("d-none");
     }
   });
 
@@ -600,12 +660,10 @@
   // provide count of number of words
   $("#sentence-input").on("input", function () {
     var input = $("#sentence-input").val();
-    console.log("input: " + input);
+
     var wordCount = countWords(input);
-    console.log("wordCount: " + wordCount);
 
     var numWordsLeft = 20 - wordCount;
-    console.log(numWordsLeft);
 
     $("#num-words-left").html(numWordsLeft);
 
@@ -617,8 +675,80 @@
     }
   });
 
+  /* ----------------------------------------VOTING---------------------------------------- */
+
+  // only the owner can click this button, send message to server to proceed everyone to voting
+  $("#proceed-to-voting").on("click", function () {
+    socket.emit("owner clicked proceed to voting");
+  });
+
+  socket.on("proceed to voting", function (data) {
+    $("#game-section").addClass("d-none"); // hide the game section
+
+    // copy everything in the board and the story text to the voting section
+    $("#voting-board").html($(".grid").html());
+    $("#voting-story").html($("#story").html());
+
+    $("#post-game-section").removeClass("d-none"); // show the post-game-section
+  });
 
 
+  voteChoices = [];
+
+  $("#voting-board").on("click", ".box", function () {
+    if (voteChoices.length !== 3) {
+      var choiceNum = $(".box").index($(this)) - 16; // offset by 16 for .box in game section board
+
+      // push panel # into vote choices
+      voteChoices.push(choiceNum);
+
+      // unhide the right voting token depending on vote choices length
+      // send the vote to the server to update other players' boards
+      if (voteChoices.length === 1) { // unhide funniest
+        socket.emit("vote", { category: "funniest", panelNum: choiceNum });
+        $("#vote-adjective").html("Most Pivotal")
+      } else if (voteChoices.length === 2) { // unhide pivotal
+        socket.emit("vote", { category: "pivotal", panelNum: choiceNum });
+        $("#vote-adjective").html("'Best Save'");
+      } else { // unhide best save
+        socket.emit("vote", { category: "best save", panelNum: choiceNum });
+        $("#voting-prompt-text").html("Waiting for other players to finish voting...");
+      }
+
+      $("html, body").animate({ scrollTop: 0 }, "fast");
+    }
+  });
+
+  socket.on("vote update", (data) => {
+    addVoteTokenToPanel($(".box").eq(data.panelNum + 16), data.category, data.playerNumber);
+  });
+
+  function addVoteTokenToPanel(panelObject, tokenType, playerNumber) {
+    var colorHex;
+    if (playerNumber === 0) {
+      colorHex = "white !important";
+    }
+    else if (playerNumber === 1) {
+      colorHex = "#69DDFF !important";
+    }
+    else if (playerNumber === 2) {
+      colorHex = "#9BC4BC !important";
+    }
+    else if (playerNumber === 3) {
+      colorHex = "#9F87AF !important";
+    }
+
+    if (tokenType === "funniest") {
+      var oldHTML = panelObject.find(".inner").html();
+      panelObject.find(".inner").html(oldHTML + `<img class="col-4 voting-token smaller-bottom-margin" src="./assets/0-funniest.png" style="background-color:` + colorHex + `">`);
+    } else if (tokenType === "best save") {
+      var oldHTML = panelObject.find(".inner").html();
+      panelObject.find(".inner").html(oldHTML + `<img class="col-4 voting-token smaller-bottom-margin" src="./assets/0-bestsave.png" style="background-color:` + colorHex + `">`);
+    } else if (tokenType === "pivotal") {
+      var oldHTML = panelObject.find(".inner").html();
+      panelObject.find(".inner").html(oldHTML + `<img class="col-4 voting-token smaller-bottom-margin" src="./assets/0-pivot.png" style="background-color:` + colorHex + `">`);
+    }
+  }
 </script>
 
 </html>

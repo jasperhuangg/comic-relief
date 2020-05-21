@@ -1,0 +1,224 @@
+<!-- 
+  TODO:
+  - the ability to rejoin the game room after you have closed a tab
+  - implement voting mechanic after the game (choice to start new game or go to summary screen)
+    ==> ability to export games at summary screen?
+  - SFX
+
+-->
+
+<!doctype html>
+<html>
+
+<head>
+  <link rel="shortcut icon" href="./assets/0-chitback.png" />
+  <title>Comic Relief</title>
+  <style>
+    body {
+      background-color: #242422 !important;
+      /* background-image: url("./assets/background.png"); */
+      background-size: cover;
+      background-origin: content-box;
+      background-position: top 100px;
+    }
+
+    .color0 {
+      color: white !important;
+    }
+
+    .color1 {
+      color: #69DDFF !important;
+    }
+
+    .color2 {
+      color: #9BC4BC !important;
+    }
+
+    .color3 {
+      color: #9F87AF !important;
+    }
+
+    .gameID:hover {
+      cursor: pointer;
+    }
+
+    #click-to-copy {
+      font-size: 12px;
+    }
+
+    .panel {
+      width: 10vw;
+      height: 10vw;
+      background-color: slategrey;
+      border-radius: 10px;
+    }
+
+    #game-section {
+      /* zoom: 0.9; */
+    }
+
+    .grid {
+      margin: 0 auto;
+      width: 65vw;
+      max-width: 65vh;
+      height: 95vw;
+      max-height: 95vh;
+      font-size: 1rem;
+    }
+
+    .box {
+      border-radius: 7px;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .handwriting {
+      font-family: 'Indie Flower', cursive;
+      font-size: 20px;
+    }
+
+    .box {
+      background: gray;
+      padding-top: 8.65%;
+      margin: 5px;
+      color: white;
+      font-weight: bold;
+      flex: 1 0 auto;
+      position: relative;
+      background-size: cover;
+      border: none;
+    }
+
+    .box:after {
+      content: "";
+      float: left;
+      display: block;
+      padding-top: 100%;
+    }
+
+    .box .inner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #story {
+
+      overflow-y: scroll;
+      overflow-wrap: normal;
+      overflow: auto !important;
+    }
+
+    .player-card img {
+      border-radius: 7px;
+      margin: 2px;
+      /* border: 2px black solid; */
+      max-width: 100%;
+      max-height: 100%;
+      display: block;
+    }
+
+    .player-card img:hover {
+      cursor: pointer;
+    }
+
+    #logo {
+      width: 400px;
+      height: 300px;
+      pointer-events: none;
+    }
+
+    .custom-font {
+      font-family: 'Balsamiq Sans', cursive;
+    }
+
+    .custom-font-small {
+      font-family: 'Balsamiq Sans', cursive;
+      font-size: 12px !important;
+    }
+
+    textarea {
+      background-color: #242422 !important;
+      border: white 2px solid !important;
+      border-radius: 8px !important;
+      color: white !important;
+    }
+
+    input {
+      background-color: #242422 !important;
+      border: white 2px solid !important;
+      border-radius: 8px !important;
+      color: white !important;
+    }
+
+    ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #ededed;
+      opacity: 1;
+      /* Firefox */
+    }
+
+    :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #ededed
+    }
+
+    ::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: #ededed
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background: #242422;
+      border-radius: 10px;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: white;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: white;
+    }
+
+    li {
+      background-color: #242422 !important;
+      color: white !important;
+      border-color: #ededed !important;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+</head>
+
+<body>
+
+</body>
+
+<script>
+
+
+</script>
+
+</html>

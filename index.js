@@ -124,6 +124,7 @@ io.on("connection", (socket) => {
       deck: cards,
       storyText: "<br>",
       cardsOnBoard: [],
+      votes: {},
     };
     games[game.gameID] = game;
 
@@ -235,6 +236,11 @@ io.on("connection", (socket) => {
       newCard: newCard,
     });
 
+    // TMP: FORCES GAME TO END AFTER FIRST TURN (TODO: REMOVE AFTER) ----------------------------------------------------------------------------------------------------
+    while (games[socket.gameID].cardsOnBoard.length < 16) {
+      games[socket.gameID].cardsOnBoard.push(1);
+    }
+
     // update everyone in the game about the updated cards on board and game text
     sendToAllPlayersInGame(
       games[socket.gameID],
@@ -255,6 +261,52 @@ io.on("connection", (socket) => {
       "your turn"
     );
   });
+
+  // signal all players in game to move on to the voting section
+  socket.on("owner clicked proceed to voting", (data) => {
+    sendToAllPlayersInGame(
+      games[socket.gameID],
+      "proceed to voting",
+      "proceed to voting"
+    );
+  });
+
+  socket.on("vote", (data) => {
+    var playerNumber = games[socket.gameID].sockets.findIndex(
+      (element) => element === socket
+    );
+    console.log("Player # " + playerNumber + " just cast their vote.");
+    sendToAllPlayersInGame(
+      games[socket.gameID],
+      {
+        category: data.category,
+        panelNum: data.panelNum,
+        playerNumber: playerNumber,
+      },
+      "vote update"
+    );
+
+    // store the vote as well
+  });
+
+  // socket.on("submit player votes", (data) => {
+  //   games[socket.gameID].votes[data.name] = data.voteChoices;
+
+  //   if (
+  //     games[socket.gameID].votes[data.name].length ===
+  //     games[socket.gameID].sockets.length
+  //   ) {
+  //     // compute votes for each player (with modulus)
+  //     var playerVotes = [0, 0, 0, 0];
+  //     for (var name in games[socket.gameID].votes) {
+  //       for (let j = 0; j < 3; j++) {
+  //         if (games[socket.gameID].votes[name][j] % )
+  //       }
+  //     }
+  //     // signal all the players that voting is done
+  //     // clear all game metadata
+  //   }
+  // });
 });
 
 http.listen(3000, () => {
