@@ -285,11 +285,8 @@ io.on("connection", (socket) => {
       "vote update"
     );
 
-    console.log(data.name);
-
     // store the vote as well
     if (!(data.name in games[socket.gameID].votes)) {
-      console.log("not inside");
       games[socket.gameID].votes[data.name] = [
         {
           panelNum: data.panelNum,
@@ -297,16 +294,13 @@ io.on("connection", (socket) => {
         },
       ];
     } else {
-      console.log("inside");
       games[socket.gameID].votes[data.name].push({
         panelNum: data.panelNum,
         category: data.category,
       });
     }
-    console.log(games[socket.gameID].votes);
     var numPlayersSubmittedVotes = Object.keys(games[socket.gameID].votes)
       .length;
-    console.log("numPlayersSubmittedVotes: " + numPlayersSubmittedVotes);
     // if we have votes from all players
     if (numPlayersSubmittedVotes === games[socket.gameID].sockets.length) {
       // if the last vote was just submitted, redirect all players to a summary screen
@@ -314,14 +308,11 @@ io.on("connection", (socket) => {
 
       for (var name in games[socket.gameID].votes) {
         if (games[socket.gameID].votes[name].length !== 3) {
-          console.log("breaking out");
           lastVoteSubmitted = false;
           break;
         }
       }
       if (lastVoteSubmitted === true) {
-        console.log("All votes submitted!");
-        console.log(games[socket.gameID].sockets);
         sendToAllPlayersInGame(
           games[socket.gameID],
           "all votes submitted",
