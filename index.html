@@ -376,7 +376,8 @@
         <div class="text-center"><button id="submit-end-turn" class="btn btn-info custom-font" disabled><strong>Submit
               and End
               Turn</strong></button><br><br>
-          <div class="font-italic custom-font-small text-white">(It's <span id="current-player-name"></span> turn)</div>
+          <div id="turn-prompt" class="font-italic custom-font-small text-white">(It's <span
+              id="current-player-name"></span> turn)</div>
         </div>
       </div>
     </div>
@@ -390,6 +391,7 @@
     <div class="text-center custom-font text-white">
       <br><br>
       <h1><strong id="voting-prompt-text">Choose the <span id="vote-adjective">Funniest</span> Panel</strong></h1>
+      <p id="voting-instructions" class="custom-font font-italic">(Click on the card you want to cast your vote to.)</p>
       <br>
     </div>
     <div id="voting-container" class="row mx-auto">
@@ -626,11 +628,10 @@
       $(this).css("background-image", "url('" + card + "')");
     });
 
-    if (data.currentPlayerName !== sessionStorage.getItem("name")) {
-      $("#current-player-name").html(data.currentPlayerName + "'s");
-    }
+    $("#current-player-name").html(data.currentPlayerName + "'s");
 
-    // scroll to the bottom of the board
+
+    // scroll to the bottom of the textarea
     $('#story').scrollTop($('#story')[0].scrollHeight);
 
     var sfx = document.getElementById("update");
@@ -642,8 +643,12 @@
       $("#sentence-input").attr("disabled", '');
       $("#submit-end-turn").attr("disabled", '');
 
-      // display the popup
+      // display the popup after 5 seconds
+      // setTimeout(function () {
       $("#story-complete-popup").removeClass("d-none");
+      // }, 5000);
+
+
     }
   });
 
@@ -690,6 +695,7 @@
     $("#voting-story").html($("#story").html());
 
     $("#post-game-section").removeClass("d-none"); // show the post-game-section
+
   });
 
 
@@ -704,15 +710,16 @@
 
       // unhide the right voting token depending on vote choices length
       // send the vote to the server to update other players' boards
-      if (voteChoices.length === 1) { // unhide funniest
-        socket.emit("vote", { category: "funniest", panelNum: choiceNum });
+      if (voteChoices.length === 1) {
+        socket.emit("vote", { name: sessionStorage.getItem("name"), category: "funniest", panelNum: choiceNum });
         $("#vote-adjective").html("Most Pivotal")
-      } else if (voteChoices.length === 2) { // unhide pivotal
-        socket.emit("vote", { category: "pivotal", panelNum: choiceNum });
+      } else if (voteChoices.length === 2) {
+        socket.emit("vote", { name: sessionStorage.getItem("name"), category: "pivotal", panelNum: choiceNum });
         $("#vote-adjective").html("'Best Save'");
-      } else { // unhide best save
-        socket.emit("vote", { category: "best save", panelNum: choiceNum });
+      } else {
+        socket.emit("vote", { name: sessionStorage.getItem("name"), category: "best save", panelNum: choiceNum });
         $("#voting-prompt-text").html("Waiting for other players to finish voting...");
+        $("#voting-instructions").addClass("d-none");
       }
 
       $("html, body").animate({ scrollTop: 0 }, "fast");
@@ -749,6 +756,11 @@
       panelObject.find(".inner").html(oldHTML + `<img class="col-4 voting-token smaller-bottom-margin" src="./assets/0-pivot.png" style="background-color:` + colorHex + `">`);
     }
   }
+
+  socket.on("all votes submitted", (data) => {
+    alert("All votes submitted!");
+    // redirect to summary page
+  })
 </script>
 
 </html>
