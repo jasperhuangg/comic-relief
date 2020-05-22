@@ -658,13 +658,15 @@
   });
 
   $(".player-card").on("click", function () {
-    $(document).find(".player-card").each(function () {
-      $(this).children("img").css("border", "none");
-    });
-    var colorHex = $(".color" + $("#player-number").html()).css("color");
-    $(this).children("img").css("border", "solid 4px " + colorHex);
-    var periodIndex = $(this).children("img").attr("src").search("png") - 1;
-    $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
+    if ($("#current-player-name").html() === "your") {
+      $(document).find(".player-card").each(function () {
+        $(this).children("img").css("border", "none");
+      });
+      var colorHex = $(".color" + $("#player-number").html()).css("color");
+      $(this).children("img").css("border", "solid 6px " + colorHex);
+      var periodIndex = $(this).children("img").attr("src").search("png") - 1;
+      $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
+    }
   })
 
   $("#submit-end-turn").on("click", function () {
@@ -867,15 +869,15 @@
 
     // get the player names
     for (let i = 0; i < data.funniestTop.length; i++) {
-      funniestPanelPlayers.push(data.playerNames[data.funniestTop[i] % 4]);
+      funniestPanelPlayers.push(data.playerNames[data.funniestTop[i] % data.playerNames.length]);
     }
 
     for (let i = 0; i < data.pivotalTop.length; i++) {
-      pivotalPanelPlayers.push(data.playerNames[data.pivotalTop[i] % 4]);
+      pivotalPanelPlayers.push(data.playerNames[data.pivotalTop[i] % data.playerNames.length]);
     }
 
     for (let i = 0; i < data.bestSaveTop.length; i++) {
-      bestSavePanelPlayers.push(data.playerNames[data.bestSaveTop[i] % 4]);
+      bestSavePanelPlayers.push(data.playerNames[data.bestSaveTop[i] % data.playerNames.length]);
     }
 
     var funniestPanelCardImgURLs = [];
@@ -926,7 +928,7 @@
         <div class="box summary-box" style='background-image: ` + funniestPanelCardImgURLs[i] + `;'></div>
       </div>
       <div class="col-5 font-italic color`+ data.playerNames.indexOf(funniestPanelPlayers[i]) + `">'` + funniestPanelTexts[i] + `'</div>
-      <div class="col-4 color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">Played by: <span>` + funniestPanelPlayers[i] + `</span></div>
+      <div class="col-4 color`+ data.playerNames.indexOf(funniestPanelPlayers[i]) + `">Played by: <span>` + funniestPanelPlayers[i] + `</span></div>
     `
       $("#funniest-section").append(innerHTML)
     }
@@ -948,7 +950,7 @@
         <div class="box summary-box" style='background-image: ` + bestSavePanelCardImgURLs[i] + `;'></div>
       </div>
       <div class="col-5 font-italic color`+ data.playerNames.indexOf(bestSavePanelPlayers[i]) + `">'` + bestSavePanelTexts[i] + `'</div>
-      <div class="col-4 color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">Played by: <span>` + bestSavePanelPlayers[i] + `</span></div>
+      <div class="col-4 color`+ data.playerNames.indexOf(bestSavePanelPlayers[i]) + `">Played by: <span>` + bestSavePanelPlayers[i] + `</span></div>
     `
       $("#best-save-section").append(innerHTML)
     }
