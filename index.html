@@ -15,6 +15,20 @@
   <link rel="shortcut icon" href="./assets/0-chitback.png" />
   <title>Comic Relief</title>
   <style>
+    .btn-info {
+      color: white !important;
+      background-color: #787876 !important;
+      border: solid 2px #787876 !important;
+      transition: 0.3s ease;
+    }
+
+    .btn-info:hover:not([disabled]) {
+      color: #787876 !important;
+      background-color: white !important;
+      border: solid 2px #787876 !important;
+      transition: 0.3s ease;
+    }
+
     body {
       background-color: #242422 !important;
       /* background-image: url("./assets/background.png"); */
@@ -24,19 +38,71 @@
     }
 
     .color0 {
-      color: white !important;
+      color: #65c8e6 !important;
+    }
+
+    .buttonColor0 {
+      color: #242422 !important;
+      background-color: #65c8e6 !important;
+      border: solid 2px #65c8e6 !important;
+      transition: 0.3s ease;
+    }
+
+    .buttonColor0:hover:not([disabled]) {
+      color: #65c8e6 !important;
+      background-color: #242422 !important;
+      border: solid 2px #65c8e6 !important;
     }
 
     .color1 {
-      color: #69DDFF !important;
+      color: #a0acd9 !important;
+    }
+
+    .buttonColor1 {
+      color: #242422 !important;
+      background-color: #a0acd9 !important;
+      border: solid 2px #a0acd9 !important;
+      transition: 0.3s ease;
+    }
+
+    .buttonColor1:hover:not([disabled]) {
+      color: #a0acd9 !important;
+      background-color: #242422 !important;
+      border: solid 2px #a0acd9 !important;
     }
 
     .color2 {
-      color: #9BC4BC !important;
+      color: #86c2b6 !important;
+    }
+
+    .buttonColor2 {
+      color: #242422 !important;
+      background-color: #86c2b6 !important;
+      border: solid 2px #86c2b6 !important;
+      transition: 0.3s ease;
+    }
+
+    .buttonColor2:hover:not([disabled]) {
+      color: #86c2b6 !important;
+      background-color: #242422 !important;
+      border: solid 2px #86c2b6 !important;
     }
 
     .color3 {
-      color: #9F87AF !important;
+      color: #dba49e !important;
+    }
+
+    .buttonColor3 {
+      color: #242422 !important;
+      background-color: #dba49e !important;
+      border: solid 2px #dba49e !important;
+      transition: 0.3s ease;
+    }
+
+    .buttonColor3:hover:not([disabled]) {
+      color: #dba49e !important;
+      background-color: #242422 !important;
+      border: solid 2px #dba49e !important;
     }
 
     .gameID:hover {
@@ -90,6 +156,10 @@
       position: relative;
       background-size: cover;
       border: none;
+    }
+
+    .summary-box {
+      padding-top: 33.5%;
     }
 
     .box:after {
@@ -295,6 +365,7 @@
 
   </div>
   <div id="game-section" class="container-fluid d-none">
+    <div id="player-number" class="d-none"></div>
     <div id="tabletop" class="row mx-4 mt-4">
       <div id="board" class="col-6 row mr-2">
         <div class="grid">
@@ -402,9 +473,44 @@
     </div>
   </div>
 
+  <div id="summary-section" class="d-none container-fluid">
+    <div class="text-center custom-font text-white">
+      <br><br>
+      <h1><strong>The votes are in!</strong></h1><br><br>
+      <br>
+    </div>
+    <div id="summary-container" class="row align-items-center mx-auto w-50 custom-font text-white">
+      <h2 class="col-12 text-center"><strong>Funniest: </strong></h2><br>
+      <div class="col-3 row" id="funniest-panel">
+        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      </div>
+      <div class="col-5 font-italic" id="funniest-text">'bla bla bla bla bla bla bla bla bla'</div>
+      <div class="col-4">Played by: <span id='funniest-played-by'>test</span></div>
+      <br><br>
+
+
+      <h2 class="col-12 text-center"><strong>Most Pivotal: </strong></h2><br>
+      <div class="col-3 row" id="pivotal-panel">
+        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      </div>
+      <div class="col-5 font-italic" id="pivotal-text">'bla bla bla bla bla bla bla bla bla'</div>
+      <div class="col-4">Played by: <span id='pivotal-played-by'>test</span></div>
+      <br><br>
+
+
+      <h2 class="col-12 text-center"><strong>Best Save: </strong></h2><br>
+      <div class="col-3 row" id="best-save-panel">
+        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      </div>
+      <div class="col-5 font-italic" id="best-save-text">'bla bla bla bla bla bla bla bla bla'</div>
+      <div class="col-4">Played by: <span id='best-save-played-by'>test</span></div>
+    </div>
+  </div>
+
   </div>
 </body>
-<script src="/socket.io/socket.io.js"></script>
+<script src=" /socket.io/socket.io.js">
+</script>
 <script>
   var socket = io();
 
@@ -489,7 +595,7 @@
     var listHTML = "";
 
     for (let i = 0; i < players.length; i++) {
-      listHTML += "<li class='list-group-item'>" + players[i] + "</li>";
+      listHTML += "<li class='list-group-item color" + i + "'>" + players[i] + "</li>";
     }
 
     $("#player-list").html(listHTML);
@@ -536,8 +642,11 @@
     $("#game-section").removeClass("d-none");
     setStoryHeight();
 
-    // set their typing color
+    // set their typing and button color
     $("#sentence-input").addClass("color" + data.playerNumber);
+    $("#submit-end-turn").addClass("buttonColor" + data.playerNumber);
+    $("#proceed-to-voting").addClass("buttonColor" + data.playerNumber);
+    $("#player-number").html(data.playerNumber);
 
     // deal the 4 starting cards given by the server
     $(".player-card").each(function (index) {
@@ -567,7 +676,8 @@
     $(document).find(".player-card").each(function () {
       $(this).children("img").css("border", "none");
     });
-    $(this).children("img").css("border", "solid 4px #24a1b7");
+    var colorHex = $(".color" + $("#player-number").html()).css("color");
+    $(this).children("img").css("border", "solid 4px " + colorHex);
     var periodIndex = $(this).children("img").attr("src").search("png") - 1;
     $(this).parent().find("#selected-card").html($(this).children("img").attr("src").substring(13, periodIndex));
   })
@@ -744,16 +854,16 @@
   function addVoteTokenToPanel(panelObject, tokenType, playerNumber) {
     var colorHex;
     if (playerNumber === 0) {
-      colorHex = "white !important";
+      colorHex = "#65c8e6 !important";
     }
     else if (playerNumber === 1) {
-      colorHex = "#69DDFF !important";
+      colorHex = "#a0acd9 !important";
     }
     else if (playerNumber === 2) {
-      colorHex = "#9BC4BC !important";
+      colorHex = "#86c2b6 !important";
     }
     else if (playerNumber === 3) {
-      colorHex = "#9F87AF !important";
+      colorHex = "#dba49e !important";
     }
 
     if (tokenType === "funniest") {
@@ -770,7 +880,11 @@
 
   socket.on("all votes submitted", (data) => {
     alert("All votes submitted!");
+
+    // create the summary page
+
     // redirect to summary page
+
   })
 </script>
 

@@ -65,6 +65,31 @@ function getRandom(arr, n) {
   return result;
 }
 
+// gets most frequent elements in arr, including ties
+function getMostFrequent(arr) {
+  var result = [];
+  var tmp = {};
+
+  // count the amount of each
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] in Object.keys(tmp)) {
+      tmp[arr[i]]++;
+    } else {
+      tmp[arr[i]] = 1;
+    }
+  }
+
+  var max = Object.keys(tmp).reduce((a, b) => (tmp[a] > tmp[b] ? a : b));
+
+  for (var i in tmp) {
+    if (tmp[i] === tmp[max]) {
+      result.push(i);
+    }
+  }
+
+  return result;
+}
+
 Array.prototype.remove = function () {
   var what,
     a = arguments,
@@ -243,9 +268,9 @@ io.on("connection", (socket) => {
     });
 
     // TMP: FORCES GAME TO END AFTER FIRST TURN (TODO: REMOVE AFTER) ----------------------------------------------------------------------------------------------------
-    while (games[socket.gameID].cardsOnBoard.length < 16) {
-      games[socket.gameID].cardsOnBoard.push(1);
-    }
+    // while (games[socket.gameID].cardsOnBoard.length < 16) {
+    //   games[socket.gameID].cardsOnBoard.push(1);
+    // }
     // ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     // update everyone in the game about the updated cards on board and game text
@@ -299,21 +324,19 @@ io.on("connection", (socket) => {
         {
           panelNum: data.panelNum,
           category: data.category,
+          voterName: socket.name,
         },
       ];
     } else {
       games[socket.gameID].votes[socket.id].push({
         panelNum: data.panelNum,
         category: data.category,
+        voterName: socket.name,
       });
     }
 
     var numPlayersSubmittedVotes = Object.keys(games[socket.gameID].votes)
       .length;
-
-    console.log(games[socket.gameID].votes);
-
-    console.log(numPlayersSubmittedVotes + " have submitted their votes");
 
     // if we have votes from all players
     if (numPlayersSubmittedVotes === games[socket.gameID].sockets.length) {
@@ -327,16 +350,50 @@ io.on("connection", (socket) => {
         }
       }
       if (lastVoteSubmitted === true) {
-        console.log("all votes submitted!");
+        console.log("All votes submitted!");
 
-        // wait 3 seconds for last player's vote to pop up
+        // calculate the voting statistics to display in the summary screen
+        var allFunniestVotes = [];
+        var allBestSaveVotes = [];
+        var allPivotalVotes = [];
+
+        for (var id in games[socket.gameID].votes) {
+          for (let i = 0; i < 3; i++) {
+            let category = games[socket.gameID].votes[id][i].category;
+            let panelNum = games[socket.gameID].votes[id][i].panelNum;
+            if (category === "funniest") {
+              allFunniestVotes.push(panelNum);
+            } else if (category === "pivotal") {
+              allPivotalVotes.push(panelNum);
+            } else if (category === "best save") {
+              allBestSaveVotes.push(panelNum);
+            }
+          }
+        }
+
+        // find the top voted panels
+        var funniestTop = getMostFrequent(allFunniestVotes);
+        var pivotalTop = getMostFrequent(allPivotalVotes);
+        var bestSaveTop = getMostFrequent(allBestSaveVotes);
+
+        var playerNames = [];
+        for (let i = 0; i < games[socket.gameID].sockets.length; i++) {
+          playerNames.push(games[socket.gameID].sockets[i].name);
+        }
+
+        // wait 500 ms for last player's vote to show up on their screen
         setTimeout(function () {
           sendToAllPlayersInGame(
             games[socket.gameID],
-            "all votes submitted",
+            {
+              funniestTop: funniestTop,
+              pivotalTop: pivotalTop,
+              bestSaveTop: bestSaveTop,
+              playerNames: playerNames,
+            },
             "all votes submitted"
           );
-        }, 1500);
+        }, 500);
       }
     }
   });
