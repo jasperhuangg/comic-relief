@@ -4,7 +4,6 @@
   - implement summary screen
     ==> ability to export games at summary screen?
   - SFX (find better ones)
-  - highlight portion of the text that matches up to card on card hover during voting
   - change story-complete-popup to be encompassed by elements already in game-section (submit turn button, player turn prompt)
 -->
 
@@ -476,34 +475,38 @@
   <div id="summary-section" class="d-none container-fluid">
     <div class="text-center custom-font text-white">
       <br><br>
-      <h1><strong>The votes are in!</strong></h1><br><br>
-      <br>
+      <h1><strong>The votes are in!</strong></h1>
+      <p class="custom-font font-italic">(Don't worry, everyone's a winner here)</p>
+      <br><br>
     </div>
     <div id="summary-container" class="row align-items-center mx-auto w-50 custom-font text-white">
-      <h2 class="col-12 text-center"><strong>Funniest: </strong></h2><br>
-      <div class="col-3 row" id="funniest-panel">
-        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      <div id="funniest-section" class="col-12 row align-items-center mb-4">
+        <!-- <h2 class="col-12"><strong>Funniest </strong></h2><br>
+        <div class="col-3 row" id="funniest-panel">
+          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+        </div>
+        <div class="col-5 font-italic" id="funniest-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+          bla bla bla'</div>
+        <div class="col-4">Played by: <span id='funniest-played-by'>test</span></div> -->
       </div>
-      <div class="col-5 font-italic" id="funniest-text">'bla bla bla bla bla bla bla bla bla'</div>
-      <div class="col-4">Played by: <span id='funniest-played-by'>test</span></div>
-      <br><br>
-
-
-      <h2 class="col-12 text-center"><strong>Most Pivotal: </strong></h2><br>
-      <div class="col-3 row" id="pivotal-panel">
-        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      <div id="most-pivotal-section" class="col-12 row align-items-center mt-4 mb-4">
+        <!-- <h2 class="col-12"><strong>Most Pivotal </strong></h2><br>
+        <div class="col-3 row" id="pivotal-panel">
+          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+        </div>
+        <div class="col-5 font-italic" id="pivotal-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+          bla bla bla'</div>
+        <div class="col-4">Played by: <span id='pivotal-played-by'>test</span></div> -->
       </div>
-      <div class="col-5 font-italic" id="pivotal-text">'bla bla bla bla bla bla bla bla bla'</div>
-      <div class="col-4">Played by: <span id='pivotal-played-by'>test</span></div>
-      <br><br>
-
-
-      <h2 class="col-12 text-center"><strong>Best Save: </strong></h2><br>
-      <div class="col-3 row" id="best-save-panel">
-        <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+      <div id="best-save-section" class="col-12 row align-items-center mt-4 mb-5">
+        <!-- <h2 class="col-12"><strong>Best Save </strong></h2><br>
+        <div class="col-3 row" id="best-save-panel">
+          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
+        </div>
+        <div class="col-5 font-italic" id="best-save-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
+          bla bla bla'</div>
+        <div class="col-4">Played by: <span id='best-save-played-by'>test</span></div> -->
       </div>
-      <div class="col-5 font-italic" id="best-save-text">'bla bla bla bla bla bla bla bla bla'</div>
-      <div class="col-4">Played by: <span id='best-save-played-by'>test</span></div>
     </div>
   </div>
 
@@ -561,8 +564,6 @@
     sessionStorage.setItem("gameID", data.gameID);
     sessionStorage.setItem("name", $("#name").val());
     $(".gameID").html(sessionStorage.getItem("gameID"));
-
-
 
     $("#welcome-section").addClass("d-none");
     $("#lobby-section").removeClass("d-none");
@@ -745,13 +746,9 @@
     sfx.play();
 
     if (data.cardsOnBoard.length === 16) {
-
-
-
       // disable all inputs
       $("#sentence-input").attr("disabled", '');
       $("#submit-end-turn").attr("disabled", '');
-
 
       $("#submit-end-turn").addClass("d-none");       // hide the submit button
       $("#proceed-to-voting").removeClass("d-none");  // show the proceed to voting button
@@ -837,7 +834,7 @@
     var rowIndex = $(this).parent().index();
     var index = $(this).index() + 4 * rowIndex;
     console.log("hovered in card " + index);
-    $("#voting-story").find(".cardMatch" + index).css("background-color", "slategrey");
+    $("#voting-story").find(".cardMatch" + index).css("background-color", "#545f6b");
   })
 
   $("#voting-board").on("mouseleave", ".box", function () {
@@ -882,10 +879,100 @@
     alert("All votes submitted!");
 
     // create the summary page
+    var funniestPanelPlayers = [];
+    var pivotalPanelPlayers = [];
+    var bestSavePanelPlayers = [];
+
+    for (let i = 0; i < data.funniestTop.length; i++) {
+      funniestPanelPlayers.push(data.playerNames[data.funniestTop[i] % 4]);
+    }
+
+    for (let i = 0; i < data.pivotalTop.length; i++) {
+      pivotalPanelPlayers.push(data.playerNames[data.pivotalTop[i] % 4]);
+    }
+
+    for (let i = 0; i < data.bestSaveTop.length; i++) {
+      bestSavePanelPlayers.push(data.playerNames[data.bestSaveTop[i] % 4]);
+    }
+
+    var funniestPanelCardImgURLs = [];
+    var pivotalPanelCardImgURLs = [];
+    var bestSavePanelCardImgURLs = [];
+
+    for (let i = 0; i < data.funniestTop.length; i++) {
+      var cardObject = $("#voting-board").find(".box").eq(data.funniestTop[i]);
+      var cardImgURL = cardObject.css("background-image");
+      funniestPanelCardImgURLs.push(cardImgURL);
+    }
+
+    for (let i = 0; i < data.pivotalTop.length; i++) {
+      var cardObject = $("#voting-board").find(".box").eq(data.pivotalTop[i]);
+      var cardImgURL = cardObject.css("background-image");
+      pivotalPanelCardImgURLs.push(cardImgURL);
+    }
+
+    for (let i = 0; i < data.bestSaveTop.length; i++) {
+      var cardObject = $("#voting-board").find(".box").eq(data.bestSaveTop[i]);
+      var cardImgURL = cardObject.css("background-image");
+      bestSavePanelCardImgURLs.push(cardImgURL);
+    }
+
+    var funniestPanelTexts = [];
+    var pivotalPanelTexts = [];
+    var bestSavePanelTexts = [];
+
+    for (let i = 0; i < data.funniestTop.length; i++) {
+      var text = $("#voting-story").find(".cardMatch" + data.funniestTop[i]).html();
+      funniestPanelTexts.push(text);
+    }
+
+    for (let i = 0; i < data.pivotalTop.length; i++) {
+      var text = $("#voting-story").find(".cardMatch" + data.pivotalTop[i]).html();
+      funniestPanelTexts.push(text);
+    }
+
+    for (let i = 0; i < data.bestSaveTop.length; i++) {
+      var text = $("#voting-story").find(".cardMatch" + data.bestSaveTop[i]).html();
+      funniestPanelTexts.push(text);
+    }
+
+    for (let i = 0; i < data.funniestTop.length; i++) {
+      var innerHTML = `        
+      <div class="col-3 row">
+        <div class="box summary-box" style="background-image: ` + funniestPanelCardImgURLs[i] + `;"></div>
+      </div>
+      <div class="col-5 font-italic">'` + funniestPanelTexts[i] + `'</div>
+      <div class="col-4">Played by: <span>`+ funniestPanelPlayers[i] + `</span></div>
+    `
+      $("#funniest-section").append(innerHTML)
+    }
+
+    for (let i = 0; i < data.pivotalTop.length; i++) {
+      var innerHTML = `        
+      <div class="col-3 row">
+        <div class="box summary-box" style="background-image: ` + pivotalPanelCardImgURLs[i] + `;"></div>
+      </div>
+      <div class="col-5 font-italic">'` + pivotalPanelTexts[i] + `'</div>
+      <div class="col-4">Played by: <span>`+ pivotalPanelPlayers[i] + `</span></div>
+    `
+      $("#most-pivotal-section").append(innerHTML)
+    }
+
+    for (let i = 0; i < data.bestSaveTop.length; i++) {
+      var innerHTML = `        
+      <div class="col-3 row">
+        <div class="box summary-box" style="background-image: ` + bestSavePanelCardImgURLs[i] + `;"></div>
+      </div>
+      <div class="col-5 font-italic">'` + bestSavePanelTexts[i] + `'</div>
+      <div class="col-4">Played by: <span>`+ bestSavePanelPlayers[i] + `</span></div>
+    `
+      $("#best-save-section").append(innerHTML)
+    }
 
     // redirect to summary page
-
-  })
+    $("#post-game-section").addClass("d-none");
+    $("#summary-section").removeClass("d-none");
+  });
 </script>
 
 </html>

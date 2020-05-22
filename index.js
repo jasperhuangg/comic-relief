@@ -381,6 +381,10 @@ io.on("connection", (socket) => {
           playerNames.push(games[socket.gameID].sockets[i].name);
         }
 
+        console.log(funniestTop);
+        console.log(pivotalTop);
+        console.log(bestSaveTop);
+
         // wait 500 ms for last player's vote to show up on their screen
         setTimeout(function () {
           sendToAllPlayersInGame(
