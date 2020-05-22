@@ -481,31 +481,13 @@
     </div>
     <div id="summary-container" class="row align-items-center mx-auto w-50 custom-font text-white">
       <div id="funniest-section" class="col-12 row align-items-center mb-4">
-        <!-- <h2 class="col-12"><strong>Funniest </strong></h2><br>
-        <div class="col-3 row" id="funniest-panel">
-          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
-        </div>
-        <div class="col-5 font-italic" id="funniest-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-          bla bla bla'</div>
-        <div class="col-4">Played by: <span id='funniest-played-by'>test</span></div> -->
+        <h2 class="col-12"><strong>Funniest </strong></h2><br>
       </div>
       <div id="most-pivotal-section" class="col-12 row align-items-center mt-4 mb-4">
-        <!-- <h2 class="col-12"><strong>Most Pivotal </strong></h2><br>
-        <div class="col-3 row" id="pivotal-panel">
-          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
-        </div>
-        <div class="col-5 font-italic" id="pivotal-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-          bla bla bla'</div>
-        <div class="col-4">Played by: <span id='pivotal-played-by'>test</span></div> -->
+        <h2 class="col-12"><strong>Most Pivotal </strong></h2><br>
       </div>
       <div id="best-save-section" class="col-12 row align-items-center mt-4 mb-5">
-        <!-- <h2 class="col-12"><strong>Best Save </strong></h2><br>
-        <div class="col-3 row" id="best-save-panel">
-          <div class="box summary-box" style="background-image: url('./assets/Card_back.png');"></div>
-        </div>
-        <div class="col-5 font-italic" id="best-save-text">'bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla
-          bla bla bla'</div>
-        <div class="col-4">Played by: <span id='best-save-played-by'>test</span></div> -->
+        <h2 class="col-12"><strong>Best Save </strong></h2><br>
       </div>
     </div>
   </div>
@@ -668,8 +650,10 @@
   socket.on("your turn", function (data) {
     if ($("#proceed-to-voting").hasClass("d-none")) {
       $("#sentence-input").removeAttr("disabled");
+      $("#sentence-input").focus();
       $("#submit-end-turn").removeAttr("disabled");
       $("#current-player-name").html("your");
+
     }
   });
 
@@ -833,14 +817,12 @@
   $("#voting-board").on("mouseenter", ".box", function () {
     var rowIndex = $(this).parent().index();
     var index = $(this).index() + 4 * rowIndex;
-    console.log("hovered in card " + index);
     $("#voting-story").find(".cardMatch" + index).css("background-color", "#545f6b");
   })
 
   $("#voting-board").on("mouseleave", ".box", function () {
     var rowIndex = $(this).parent().index();
     var index = $(this).index() + 4 * rowIndex;
-    console.log("hovered out card " + index);
     $("#voting-story").find(".cardMatch" + index).css("background-color", "transparent");
   })
 
@@ -876,13 +858,14 @@
   }
 
   socket.on("all votes submitted", (data) => {
-    alert("All votes submitted!");
+    // alert("All votes submitted!");
 
     // create the summary page
     var funniestPanelPlayers = [];
     var pivotalPanelPlayers = [];
     var bestSavePanelPlayers = [];
 
+    // get the player names
     for (let i = 0; i < data.funniestTop.length; i++) {
       funniestPanelPlayers.push(data.playerNames[data.funniestTop[i] % 4]);
     }
@@ -899,6 +882,7 @@
     var pivotalPanelCardImgURLs = [];
     var bestSavePanelCardImgURLs = [];
 
+    // get the card img URLs
     for (let i = 0; i < data.funniestTop.length; i++) {
       var cardObject = $("#voting-board").find(".box").eq(data.funniestTop[i]);
       var cardImgURL = cardObject.css("background-image");
@@ -928,21 +912,21 @@
 
     for (let i = 0; i < data.pivotalTop.length; i++) {
       var text = $("#voting-story").find(".cardMatch" + data.pivotalTop[i]).html();
-      funniestPanelTexts.push(text);
+      pivotalPanelTexts.push(text);
     }
 
     for (let i = 0; i < data.bestSaveTop.length; i++) {
       var text = $("#voting-story").find(".cardMatch" + data.bestSaveTop[i]).html();
-      funniestPanelTexts.push(text);
+      bestSavePanelTexts.push(text);
     }
 
     for (let i = 0; i < data.funniestTop.length; i++) {
       var innerHTML = `        
       <div class="col-3 row">
-        <div class="box summary-box" style="background-image: ` + funniestPanelCardImgURLs[i] + `;"></div>
+        <div class="box summary-box" style='background-image: ` + funniestPanelCardImgURLs[i] + `;'></div>
       </div>
-      <div class="col-5 font-italic">'` + funniestPanelTexts[i] + `'</div>
-      <div class="col-4">Played by: <span>`+ funniestPanelPlayers[i] + `</span></div>
+      <div class="col-5 font-italic color`+ data.playerNames.indexOf(funniestPanelPlayers[i]) + `">'` + funniestPanelTexts[i] + `'</div>
+      <div class="col-4 color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">Played by: <span>` + funniestPanelPlayers[i] + `</span></div>
     `
       $("#funniest-section").append(innerHTML)
     }
@@ -950,10 +934,10 @@
     for (let i = 0; i < data.pivotalTop.length; i++) {
       var innerHTML = `        
       <div class="col-3 row">
-        <div class="box summary-box" style="background-image: ` + pivotalPanelCardImgURLs[i] + `;"></div>
+        <div class="box summary-box" style='background-image: ` + pivotalPanelCardImgURLs[i] + `;'></div>
       </div>
-      <div class="col-5 font-italic">'` + pivotalPanelTexts[i] + `'</div>
-      <div class="col-4">Played by: <span>`+ pivotalPanelPlayers[i] + `</span></div>
+      <div class="col-5 font-italic color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">'` + pivotalPanelTexts[i] + `'</div>
+      <div class="col-4 color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">Played by: <span>` + pivotalPanelPlayers[i] + `</span></div>
     `
       $("#most-pivotal-section").append(innerHTML)
     }
@@ -961,10 +945,10 @@
     for (let i = 0; i < data.bestSaveTop.length; i++) {
       var innerHTML = `        
       <div class="col-3 row">
-        <div class="box summary-box" style="background-image: ` + bestSavePanelCardImgURLs[i] + `;"></div>
+        <div class="box summary-box" style='background-image: ` + bestSavePanelCardImgURLs[i] + `;'></div>
       </div>
-      <div class="col-5 font-italic">'` + bestSavePanelTexts[i] + `'</div>
-      <div class="col-4">Played by: <span>`+ bestSavePanelPlayers[i] + `</span></div>
+      <div class="col-5 font-italic color`+ data.playerNames.indexOf(bestSavePanelPlayers[i]) + `">'` + bestSavePanelTexts[i] + `'</div>
+      <div class="col-4 color`+ data.playerNames.indexOf(pivotalPanelPlayers[i]) + `">Played by: <span>` + bestSavePanelPlayers[i] + `</span></div>
     `
       $("#best-save-section").append(innerHTML)
     }

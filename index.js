@@ -72,7 +72,8 @@ function getMostFrequent(arr) {
 
   // count the amount of each
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] in Object.keys(tmp)) {
+    let panelNum = arr[i];
+    if (panelNum.toString(10) in tmp) {
       tmp[arr[i]]++;
     } else {
       tmp[arr[i]] = 1;
@@ -362,11 +363,11 @@ io.on("connection", (socket) => {
             let category = games[socket.gameID].votes[id][i].category;
             let panelNum = games[socket.gameID].votes[id][i].panelNum;
             if (category === "funniest") {
-              allFunniestVotes.push(panelNum);
+              allFunniestVotes.push(parseInt(panelNum));
             } else if (category === "pivotal") {
-              allPivotalVotes.push(panelNum);
+              allPivotalVotes.push(parseInt(panelNum));
             } else if (category === "best save") {
-              allBestSaveVotes.push(panelNum);
+              allBestSaveVotes.push(parseInt(panelNum));
             }
           }
         }
@@ -381,9 +382,9 @@ io.on("connection", (socket) => {
           playerNames.push(games[socket.gameID].sockets[i].name);
         }
 
-        console.log(funniestTop);
-        console.log(pivotalTop);
-        console.log(bestSaveTop);
+        console.log("Funniest winners: " + funniestTop);
+        console.log("Pivotal winners: " + pivotalTop);
+        console.log("Best Save winners: " + bestSaveTop);
 
         // wait 500 ms for last player's vote to show up on their screen
         setTimeout(function () {
