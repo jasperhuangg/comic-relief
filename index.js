@@ -119,6 +119,7 @@ io.on("connection", (socket) => {
         // remove the game
         delete games[socket.gameID];
       } else if (games[socket.gameID].sockets.length % 2 !== 0) {
+        console.log("not ready to start");
         sendToGameOwner(
           games[socket.gameID],
           "not ready to start",
@@ -173,13 +174,19 @@ io.on("connection", (socket) => {
           gameID: data.gameID,
         });
       } else if (games[gameID].sockets.length === 4) {
-        socket.emit("join failure", "game full");
+        socket.emit(
+          "join failure",
+          "Sorry, the game you're trying to join is full."
+        );
       } else if (games[gameID].started === true) {
-        socket.emit("join failure", "Game already started.");
+        socket.emit(
+          "join failure",
+          "Sorry, the game you are trying to join has already started."
+        );
       }
     } else {
       // emit no game with that gameID exists back to client
-      socket.emit("join failure", "Game ID does not exist.");
+      socket.emit("join failure", "Sorry, that game does not exist.");
     }
   });
 
@@ -193,6 +200,13 @@ io.on("connection", (socket) => {
     if (games[socket.gameID].sockets.length % 2 === 0) {
       console.log("Game with ID " + socket.gameID + " ready to start");
       sendToGameOwner(games[socket.gameID], "ready to start", "ready to start");
+    } else if (games[socket.gameID].sockets.length % 2 !== 0) {
+      console.log("Game with ID " + socket.gameID + " not ready to start");
+      sendToGameOwner(
+        games[socket.gameID],
+        "not ready to start",
+        "not ready to start"
+      );
     }
   });
 

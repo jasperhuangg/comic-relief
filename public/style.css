@@ -1,0 +1,303 @@
+.btn-info {
+  color: white !important;
+  background-color: #787876 !important;
+  border: solid 2px #787876 !important;
+  transition: 0.3s ease;
+}
+
+.btn-info:hover:not([disabled]) {
+  color: #787876 !important;
+  background-color: white !important;
+  border: solid 2px #787876 !important;
+  transition: 0.3s ease;
+}
+
+body {
+  background-color: #242422 !important;
+  /* background-image: url("./assets/background.png"); */
+  background-size: cover;
+  background-origin: content-box;
+  background-position: top 100px;
+}
+
+.color0 {
+  color: #65c8e6 !important;
+}
+
+.buttonColor0 {
+  color: #242422 !important;
+  background-color: #65c8e6 !important;
+  border: solid 2px #65c8e6 !important;
+  transition: 0.3s ease;
+}
+
+.buttonColor0:hover:not([disabled]) {
+  color: #65c8e6 !important;
+  background-color: #242422 !important;
+  border: solid 2px #65c8e6 !important;
+}
+
+.color1 {
+  color: #a0acd9 !important;
+}
+
+.buttonColor1 {
+  color: #242422 !important;
+  background-color: #a0acd9 !important;
+  border: solid 2px #a0acd9 !important;
+  transition: 0.3s ease;
+}
+
+.buttonColor1:hover:not([disabled]) {
+  color: #a0acd9 !important;
+  background-color: #242422 !important;
+  border: solid 2px #a0acd9 !important;
+}
+
+.color2 {
+  color: #86c2b6 !important;
+}
+
+.buttonColor2 {
+  color: #242422 !important;
+  background-color: #86c2b6 !important;
+  border: solid 2px #86c2b6 !important;
+  transition: 0.3s ease;
+}
+
+.buttonColor2:hover:not([disabled]) {
+  color: #86c2b6 !important;
+  background-color: #242422 !important;
+  border: solid 2px #86c2b6 !important;
+}
+
+.color3 {
+  color: #dba49e !important;
+}
+
+.buttonColor3 {
+  color: #242422 !important;
+  background-color: #dba49e !important;
+  border: solid 2px #dba49e !important;
+  transition: 0.3s ease;
+}
+
+.buttonColor3:hover:not([disabled]) {
+  color: #dba49e !important;
+  background-color: #242422 !important;
+  border: solid 2px #dba49e !important;
+}
+
+.gameID:hover {
+  cursor: pointer;
+}
+
+#click-to-copy {
+  font-size: 12px;
+}
+
+.panel {
+  width: 10vw;
+  height: 10vw;
+  background-color: slategrey;
+  border-radius: 10px;
+}
+
+#game-section {
+  /* zoom: 0.9; */
+}
+
+.grid {
+  margin: 0 auto;
+  width: 65vw;
+  max-width: 65vh;
+  height: 95vw;
+  max-height: 95vh;
+  font-size: 1rem;
+}
+
+.box {
+  border-radius: 7px;
+}
+
+.row {
+  display: flex;
+}
+
+.handwriting {
+  font-family: "Indie Flower", cursive;
+  font-size: 20px;
+}
+
+.box {
+  background: gray;
+  padding-top: 8.65%;
+  margin: 5px;
+  color: white;
+  font-weight: bold;
+  flex: 1 0 auto;
+  position: relative;
+  background-size: cover;
+  border: none;
+}
+
+.summary-box {
+  padding-top: 33.5%;
+}
+
+.box:after {
+  content: "";
+  float: left;
+  display: block;
+  padding-top: 100%;
+}
+
+.box .inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%;
+}
+
+#story {
+  overflow-y: scroll;
+  overflow-wrap: normal;
+  overflow: auto !important;
+}
+
+.player-card img {
+  border-radius: 7px;
+  margin: 2px;
+  /* border: 2px black solid; */
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
+
+.player-card img:hover {
+  cursor: pointer;
+}
+
+#logo {
+  width: 400px;
+  height: 300px;
+  pointer-events: none;
+}
+
+.custom-font {
+  font-family: "Balsamiq Sans", cursive;
+}
+
+.custom-font-small {
+  font-family: "Balsamiq Sans", cursive;
+  font-size: 12px !important;
+}
+
+textarea {
+  background-color: #242422 !important;
+  border: white 2px solid !important;
+  border-radius: 8px !important;
+  color: white !important;
+}
+
+input {
+  background-color: #242422 !important;
+  border: white 2px solid !important;
+  border-radius: 8px !important;
+  color: white !important;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ededed;
+  opacity: 1;
+  /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #ededed;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #ededed;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #242422;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: white;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: white;
+}
+
+li {
+  background-color: #242422 !important;
+  color: white !important;
+  border-color: #ededed !important;
+}
+
+#story-complete-popup {
+  width: 40vw;
+  background-color: #242422;
+  border: solid 5px #24a1b7;
+  border-radius: 10px;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 20vw;
+  margin-right: auto;
+  margin-left: auto;
+  z-index: 1000;
+  padding-bottom: 20px;
+}
+
+#voting-board .box {
+  cursor: pointer;
+}
+
+.voting-token {
+  width: 25% !important;
+  border-radius: 50%;
+  box-shadow: 3px 3px 3px #363636;
+  background-color: #8c8c8c;
+  z-index: 1000;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+#voting-container {
+  width: 85%;
+}
+
+.smaller-bottom-margin {
+  margin-bottom: 5px !important;
+}
+
+.voteText {
+  border-radius: 4px;
+}
+
+.btn-info:focus {
+  outline: none !important;
+}
