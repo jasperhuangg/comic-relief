@@ -153,7 +153,6 @@ $(document).ready(function () {
 });
 
 $(window).resize(function () {
-  console.log(screen.width);
   if (screen.width <= 768) {
     $("#welcome-section").addClass("d-none");
     $("#not-supported-section").removeClass("d-none");
