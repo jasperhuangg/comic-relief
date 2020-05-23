@@ -142,7 +142,25 @@ $(document).ready(function () {
   setStoryHeight();
 });
 
+$(document).ready(function () {
+  if (screen.width <= 768) {
+    $("#welcome-section").addClass("d-none");
+    $("#not-supported-section").removeClass("d-none");
+  } else if (screen.width > 768) {
+    $("#welcome-section").removeClass("d-none");
+    $("#not-supported-section").addClass("d-none");
+  }
+});
+
 $(window).resize(function () {
+  console.log(screen.width);
+  if (screen.width <= 768) {
+    $("#welcome-section").addClass("d-none");
+    $("#not-supported-section").removeClass("d-none");
+  } else if (screen.width > 768) {
+    $("#welcome-section").removeClass("d-none");
+    $("#not-supported-section").addClass("d-none");
+  }
   setStoryHeight();
 });
 
