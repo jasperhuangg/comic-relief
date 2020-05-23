@@ -155,10 +155,11 @@ $(document).ready(function () {
 $(window).resize(function () {
   if (screen.width <= 768) {
     $("#welcome-section").addClass("d-none");
+    $("#lobby-section").addClass("d-none");
+    $("#post-game-section").addClass("d-none");
+    $("#game-section").addClass("d-none");
+    $("#summary-section").addClass("d-none");
     $("#not-supported-section").removeClass("d-none");
-  } else if (screen.width > 768) {
-    $("#welcome-section").removeClass("d-none");
-    $("#not-supported-section").addClass("d-none");
   }
   setStoryHeight();
 });
